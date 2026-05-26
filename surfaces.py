@@ -216,10 +216,10 @@ def legSurf(rays,xwidth,ywidth,order,coeff,xo,yo):
                  coeff.flatten(),xo.flatten(),yo.flatten())
     return
 
-def wolterprimary(rays,r0,z0,psi=1.,nr=None,index=None):
+def wolterprimary(rays,r0,z0,psi=1.,nr=None,ind=None):
     """Wrapper for Wolter primary surface - no vignetting
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,index]
+    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
     if nr is None:
         wolt.wolterprimary(x,y,z,l,m,n,ux,uy,uz,r0,z0,psi)
     else:
@@ -235,10 +235,10 @@ def wolterprimarynode(rays,r0,z0,psi=1.):
     tran.itransform(rays,-r0,0,-z0,0,0,0)
     return
 
-def woltersecondary(rays,r0,z0,psi=1.,index=None):
+def woltersecondary(rays,r0,z0,psi=1.,ind=None):
     """Wrapper for Wolter secondary surface - no vignetting
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,index]
+    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
     wolt.woltersecondary(x,y,z,l,m,n,ux,uy,uz,r0,z0,psi)
     return
 
@@ -328,14 +328,14 @@ def primaryLLtan(rays,r0,z0,zmax,zmin,dphi,coeff,axial,az):
     transform(0,0,0,np.pi/2+alpha,0,0)
     return
 
-def wsPrimary(rays,r0,z0,psi,index=None,check=False):
+def wsPrimary(rays,r0,z0,psi,ind=None,check=False):
     """Trace a W-S primary surface
     Fortran function computes Chase parameters for an equivalent W-I
     betas, f, g, and k computed from alpha and z0
     If check is True, function will check for rays that fail
     to converge to surface
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,index]
+    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
     a,p,d,e = con.woltparam(r0,z0)
     if check is True:
         x0,y0,z0 = np.copy([x,y,z,])
@@ -364,14 +364,14 @@ def wsPrimaryB(rays,r0,z0,psi,thick,check=False):
         return fail
     return
 
-def wsSecondary(rays,r0,z0,psi,index=None,check=False):
+def wsSecondary(rays,r0,z0,psi,ind=None,check=False):
     """Trace a W-S secondary surface
     Fortran function computes Chase parameters for an equivalent W-I
     betas, f, g, and k computed from alpha and z0
     If check is True, function will check for rays that fail
     to converge to surface
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,index]
+    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
     a,p,d,e = con.woltparam(r0,z0)
     if check is True:
         x0,y0,z0 = np.copy([x,y,z,])
