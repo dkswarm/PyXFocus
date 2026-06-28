@@ -219,11 +219,23 @@ def legSurf(rays,xwidth,ywidth,order,coeff,xo,yo):
 def wolterprimary(rays,r0,z0,psi=1.,nr=None,ind=None):
     """Wrapper for Wolter primary surface - no vignetting
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
-    if nr is None:
-        wolt.wolterprimary(x,y,z,l,m,n,ux,uy,uz,r0,z0,psi)
+    opd,x,y,z,l,m,n,ux,uy,uz = rays
+    if ind is not None:
+        tx,ty,tz,tl,tm,tn,tux,tuy,tuz = x[ind],y[ind],z[ind],\
+                                        l[ind],m[ind],n[ind],\
+                                        ux[ind],uy[ind],uz[ind]
+        if nr is None:
+            wolt.wolterprimary(tx,ty,tz,tl,tm,tn,tux,tuy,tuz,r0,z0,psi)
+        else:
+            wolt.wolterprimary(opd,tx,ty,tz,tl,tm,tn,tux,tuy,tuz,r0,z0,psi,nr)
+        x[ind],y[ind],z[ind],\
+        l[ind],m[ind],n[ind],\
+        ux[ind],uy[ind],uz[ind] = tx,ty,tz,tl,tm,tn,tux,tuy,tuz
     else:
-        wolt.wolterprimaryopd(opd,x,y,z,l,m,n,ux,uy,uz,r0,z0,psi,nr)
+        if nr is None:
+            wolt.wolterprimary(x,y,z,l,m,n,ux,uy,uz,r0,z0,psi)
+        else:
+            wolt.wolterprimaryopd(opd,x,y,z,l,m,n,ux,uy,uz,r0,z0,psi,nr)
     return
 
 def wolterprimarynode(rays,r0,z0,psi=1.):
@@ -238,8 +250,17 @@ def wolterprimarynode(rays,r0,z0,psi=1.):
 def woltersecondary(rays,r0,z0,psi=1.,ind=None):
     """Wrapper for Wolter secondary surface - no vignetting
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
-    wolt.woltersecondary(x,y,z,l,m,n,ux,uy,uz,r0,z0,psi)
+    opd,x,y,z,l,m,n,ux,uy,uz = rays
+    if ind is not None:
+        tx,ty,tz,tl,tm,tn,tux,tuy,tuz = x[ind],y[ind],z[ind],\
+                                        l[ind],m[ind],n[ind],\
+                                        ux[ind],uy[ind],uz[ind]
+        wolt.woltersecondary(tx,ty,tz,tl,tm,tn,tux,tuy,tuz,r0,z0,psi)
+        x[ind],y[ind],z[ind],\
+        l[ind],m[ind],n[ind],\
+        ux[ind],uy[ind],uz[ind] = tx,ty,tz,tl,tm,tn,tux,tuy,tuz
+    else:
+        wolt.woltersecondary(x,y,z,l,m,n,ux,uy,uz,r0,z0,psi)
     return
 
 def wolterprimtan(rays,r0,z0):
@@ -335,7 +356,7 @@ def wsPrimary(rays,r0,z0,psi,ind=None,check=False):
     If check is True, function will check for rays that fail
     to converge to surface
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
+    opd,x,y,z,l,m,n,ux,uy,uz = rays
     a,p,d,e = con.woltparam(r0,z0)
     if check is True:
         x0,y0,z0 = np.copy([x,y,z,])
@@ -371,7 +392,7 @@ def wsSecondary(rays,r0,z0,psi,ind=None,check=False):
     If check is True, function will check for rays that fail
     to converge to surface
     """
-    opd,x,y,z,l,m,n,ux,uy,uz = rays[:,ind]
+    opd,x,y,z,l,m,n,ux,uy,uz = rays
     a,p,d,e = con.woltparam(r0,z0)
     if check is True:
         x0,y0,z0 = np.copy([x,y,z,])
